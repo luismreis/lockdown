@@ -32,7 +32,8 @@ module Lockdown
 
           def check_request_authorization
             unless authorized?(path_from_hash(params))
-              raise SecurityError, "Authorization failed! \nparams: #{params.inspect}\nsession: #{session.inspect}"
+              parameters = respond_to?(:filter_parameters) ? filter_parameters(params) : params.dup
+              raise SecurityError, "Authorization failed! \nparams: #{parameters.inspect}\nsession: #{session.inspect}"
             end
           end
 
