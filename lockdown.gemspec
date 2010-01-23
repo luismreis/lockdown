@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lockdown}
-  s.version = "1.6.2"
+  s.version = "1.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Stone"]
-  s.date = %q{2009-11-28}
+  s.date = %q{2010-01-22}
   s.description = %q{Restrict access to your controller actions.  Supports basic model level restrictions as well}
   s.email = %q{andy@stonean.com}
   s.extra_rdoc_files = [
@@ -88,16 +88,16 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Authorization system for Rails 2.x}
   s.test_files = [
-    "spec/lockdown/context_spec.rb",
-     "spec/lockdown/database_spec.rb",
+    "spec/lockdown/rules_spec.rb",
+     "spec/lockdown/context_spec.rb",
+     "spec/lockdown/system_spec.rb",
+     "spec/lockdown/session_spec.rb",
+     "spec/lockdown/frameworks/rails_spec.rb",
      "spec/lockdown/frameworks/rails/controller_spec.rb",
      "spec/lockdown/frameworks/rails/view_spec.rb",
-     "spec/lockdown/frameworks/rails_spec.rb",
      "spec/lockdown/permission_spec.rb",
+     "spec/lockdown/database_spec.rb",
      "spec/lockdown/rspec_helper_spec.rb",
-     "spec/lockdown/rules_spec.rb",
-     "spec/lockdown/session_spec.rb",
-     "spec/lockdown/system_spec.rb",
      "spec/lockdown_spec.rb",
      "spec/spec_helper.rb"
   ]
