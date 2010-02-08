@@ -35,7 +35,15 @@ describe Lockdown::Frameworks::Rails::Controller do
       @view.stub!(:authorized?).and_return(false)
 
       @view.link_to_secured("my link", @options).should == ""
-    end 
+    end
+
+    it 'should use the default "get" when html_options[:method] is nil' do
+      link = "<a href='http://a.com'>my_link</a>"
+
+      @view.should_receive(:authorized?).with('posts/new', :get)
+
+      @view.link_to_secured("my link", @options, {})
+    end
   end
 
   describe "#button_to_secured" do
@@ -51,7 +59,7 @@ describe Lockdown::Frameworks::Rails::Controller do
       @view.stub!(:authorized?).and_return(false)
 
       @view.button_to_secured("my link", @options).should == ""
-    end 
+    end
   end
 
   describe "#link_to_or_show" do
@@ -85,3 +93,4 @@ describe Lockdown::Frameworks::Rails::Controller do
     end
   end
 end
+

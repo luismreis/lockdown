@@ -11,11 +11,11 @@ module Lockdown
             alias_method :button_to, :button_to_secured
           end
         end
-    
+
         def link_to_secured(name, options = {}, html_options = nil)
           url = url_for(options)
 
-          method = html_options ? html_options[:method] : :get
+          method = html_options && html_options[:method] ? html_options[:method] : :get
 
           if authorized?(url, method)
             return link_to_open(name, url, html_options)
@@ -48,3 +48,4 @@ module Lockdown
     end # Rails
   end # Frameworks
 end # Lockdown
+
