@@ -77,6 +77,11 @@ module Lockdown
 
             path = url_parts[5]
 
+            subdir = Lockdown::System.fetch(:subdirectory)
+            if subdir && subdir == path[1,subdir.length]
+              path = path[(subdir.length+1)..-1]
+            end
+
             return true if path_allowed?(path)
 
             begin
@@ -120,7 +125,8 @@ module Lockdown
           end
 
           def path_from_hash(hash)
-            hash[:controller].to_s + "/" + hash[:action].to_s
+            subdir = Lockdown::System.fetch(:subdirectory)
+            (subdir ? subdir + "/" : "") + hash[:controller].to_s + "/" + hash[:action].to_s
           end
 
           def remote_url?(domain = nil)
