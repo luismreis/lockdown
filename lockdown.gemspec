@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lockdown}
-  s.version = "1.6.4"
+  s.version = "1.6.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Stone"]
-  s.date = %q{2010-02-08}
+  s.date = %q{2010-03-01}
   s.description = %q{Restrict access to your controller actions.  Supports basic model level restrictions as well}
   s.email = %q{andy@stonean.com}
   s.extra_rdoc_files = [
