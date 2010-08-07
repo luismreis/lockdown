@@ -1,6 +1,4 @@
-lockdown
-    by Andrew Stone
-    http://stonean.com
+== I AM NO LONGER MAINTAINING THIS PROJECT.
 
 == DESCRIPTION:
 
