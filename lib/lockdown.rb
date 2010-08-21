@@ -16,7 +16,7 @@ module Lockdown
   extend Lockdown::References
   extend Lockdown::Helper
 
-  VERSION = '1.6.5'
+  VERSION = '2.0.0'
 
   class << self
     attr_accessor :logger

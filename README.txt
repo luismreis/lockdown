@@ -1,7 +1,6 @@
-
 == DESCRIPTION:
 
-Lockdown is an authorization system for RubyOnRails (ver >= 2.1).
+Lockdown is an authorization system for RubyOnRails (ver >= 3.0).
 
 
 Version 3.0 of Lockdown will be a Rails 3 compatible rewrite.  I'm going to take some of the discoveries from Monty (my Rack based authorization project) and roll them into Lockdown.
