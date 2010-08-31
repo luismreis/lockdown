@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require File.join(File.dirname(__FILE__), "rails", "controller")
 require File.join(File.dirname(__FILE__), "rails", "view")
 

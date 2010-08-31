@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Lockdown
   class Context
     attr_accessor :name, :allowed_methods

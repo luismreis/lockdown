@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Lockdown
   class Database
     class << self

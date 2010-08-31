@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Lockdown
   class Controller
     attr_accessor :name, :access_methods, :only_methods, :except_methods
