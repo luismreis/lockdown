@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 $:.unshift File.dirname(__FILE__)
 
 require 'logger'
@@ -21,21 +23,9 @@ module Lockdown
   class << self
     attr_accessor :logger
 
-    # Returns the version string for the library.
+    # @return the version string for the library.
     def version
       VERSION
-    end
-
-    def major_version
-      version.split('.')[0].to_i
-    end
-
-    def minor_version
-      version.split('.')[1].to_i
-    end
-
-    def patch_version
-      version.split('.')[2].to_i
     end
 
     # Mixin Lockdown code to the appropriate framework and ORM
