@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Lockdown
   module Rules
     attr_accessor :options
@@ -51,7 +53,7 @@ module Lockdown
     #
     def set_public_access(*perms)
       perms.each do |perm_symbol|
-        perm = find_permission_object(perm_symbol)
+        perm = permission_objects[perm_symbol]
         if perm
           perm.set_as_public_access 
         else
@@ -68,7 +70,7 @@ module Lockdown
     #
     def set_protected_access(*perms)
       perms.each do |perm_symbol|
-        perm = find_permission_object(perm_symbol)
+        perm = permission_objects[perm_symbol]
         if perm
           perm.set_as_protected_access 
         else
@@ -111,13 +113,13 @@ module Lockdown
     
     # returns true if the permission is public
     def public_access?(perm_symbol)
-      obj = find_permission_object(perm_symbol)
+      obj = permission_objects[perm_symbol]
       obj.nil? ? false : obj.public_access? 
     end
 
     # returns true if the permission is public
     def protected_access?(perm_symbol)
-      obj = find_permission_object(perm_symbol)
+      obj = permission_objects[perm_symbol]
       obj.nil? ? false : obj.protected_access?
     end
 
@@ -284,11 +286,6 @@ module Lockdown
     end
 
     private
-
-    def find_permission_object(perm_symbol)
-      obj = permission_objects.find{|name, pobj| pobj.name == perm_symbol}
-      obj[1] if obj
-    end
 
     def validate_user_groups
       user_groups.each do |user_group, perms|
