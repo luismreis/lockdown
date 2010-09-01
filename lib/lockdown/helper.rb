@@ -4,12 +4,19 @@ require 'active_support'
 
 module Lockdown
   module Helper
-    def class_name_from_file(str)
-      str.split(".")[0].split("/").collect{|s| camelize(s) }.join("::")
+
+    # @return [Regexp] with \A \z boundaries
+    def regex(string)
+      Regexp.new(/\A#{string}\z/)
     end
 
-    # If str_sym is a Symbol (:users), return "Users"
-    # If str_sym is a String ("Users"), return :users
+    # @return [String] concatentation of public_access + "|" + protected_access
+    def authenticated_access
+      Monty::Configuration.public_access + "|" + Monty::Configuration.protected_access
+    end
+
+    # @param [:users, "Users"]
+    # @return "Users", :users
     def convert_reference_name(str_sym)
       if str_sym.is_a?(Symbol)
         titleize(str_sym)

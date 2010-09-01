@@ -7,12 +7,11 @@ require 'logger'
 require File.join("lockdown", "errors")
 require File.join("lockdown", "helper")
 require File.join("lockdown", "session")
-require File.join("lockdown", "context")
-require File.join("lockdown", "permission")
 require File.join("lockdown", "database")
 require File.join("lockdown", "rules")
-require File.join("lockdown", "system")
 require File.join("lockdown", "references")
+
+require File.join("lockdown", "configuration")
 
 module Lockdown
   extend Lockdown::References
@@ -39,17 +38,6 @@ module Lockdown
       end
     end # mixin
 
-    def maybe_parse_init
-      return if Lockdown::System.initialized?
-
-      if File.exists?(Lockdown.init_file)
-        Lockdown.logger.info "=> Requiring Lockdown rules engine: #{Lockdown.init_file} \n"
-        load Lockdown.init_file
-      else
-        Lockdown.logger.info "=> Note:: Lockdown couldn't find init file: #{Lockdown.init_file}\n"
-      end
-    end
-
     private
 
     def mixin_resource?(str)
@@ -70,6 +58,10 @@ module Lockdown
   self.logger = Logger.new(STDOUT)
 
 end # Lockdown
+
+require File.join("lockdown", "resource")
+require File.join("lockdown", "permission")
+require File.join("lockdown", "access")
 
 Lockdown.logger.info "=> Mixing in Lockdown version: #{Lockdown.version} \n"
 Lockdown.mixin

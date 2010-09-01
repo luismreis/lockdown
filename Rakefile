@@ -1,38 +1,55 @@
 require 'rubygems'
 require 'rake'
-require 'rcov'
-require 'spec/rake/spectask'
 
-require 'lib/lockdown.rb'
-task :default => 'rcov'
-
-desc "Flog your code for Justice!"
-task :flog do
-    sh('flog lib/**/*.rb')
-end
-
-desc "Run all specs and rcov in a non-sucky way"
-Spec::Rake::SpecTask.new(:rcov) do |t|
-  t.spec_opts = IO.readlines("spec/spec.opts").map {|l| l.chomp.split " "}.flatten
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = true
-  t.rcov_opts = IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
-end
+require File.join(File.dirname(__FILE__), "lib", "lockdown")
 
 begin
   require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "lockdown"
-    gemspec.version = Lockdown.version
-    gemspec.rubyforge_project = "lockdown"
-    gemspec.summary = "Authorization system for Rails 2.x"
-    gemspec.description = "Restrict access to your controller actions.  Supports basic model level restrictions as well"
-    gemspec.email = "andy@stonean.com"
-    gemspec.homepage = "http://stonean.com/wiki/lockdown"
-    gemspec.authors = ["Andrew Stone"]
-    gemspec.add_development_dependency('rspec')
+  Jeweler::Tasks.new do |gem|
+    gem.name = "lockdown"
+    gem.version = Lockdown.version
+    gem.rubyforge_project = "lockdown"
+    gem.summary = "Authorization system for Rails 2.x"
+    gem.description = "Restrict access to your controller actions.  Supports basic model level restrictions as well"
+    gem.email = "andy@stonean.com"
+    gem.homepage = "http://stonean.com/wiki/lockdown"
+    gem.authors = ["Andrew Stone"]
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new do |t|
+    t.files   = FileList['lib/**/*.rb']
+    t.options = ['-r'] # optional
+  end
+rescue LoadError
+  task :yard do
+    abort "YARD is not available. In order to run yard, you must: sudo gem install yard"
+  end
+end
+
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/test_*.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "RCov is not available. In order to run rcov, you must: sudo gem install rcov"
+  end
+end
+
+task :default => 'test'

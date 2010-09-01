@@ -1,5 +1,6 @@
 *.DS_Store
 *.swp
+.yardoc/**
 pkg/**
 doc/**
 email.txt
