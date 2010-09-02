@@ -59,6 +59,7 @@ module Lockdown
 
 end # Lockdown
 
+require File.join("lockdown", "delivery")
 require File.join("lockdown", "resource")
 require File.join("lockdown", "permission")
 require File.join("lockdown", "access")
