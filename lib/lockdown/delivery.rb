@@ -3,7 +3,7 @@
 module Lockdown
   class Delivery
     class << self
-      # @return [true|false] if the given path and method are allowed  
+      # @return [true|false] if the given path is allowed
       def allowed?(path, access_rights = nil)
         return true if path == '/'
 
