@@ -23,7 +23,7 @@ module Lockdown
             include Lockdown::Frameworks::Rails::View
           end
 
-          Lockdown.system.class_eval do 
+          Lockdown::System.class_eval do 
             extend Lockdown::Frameworks::Rails::System
           end
         end
@@ -36,13 +36,12 @@ module Lockdown
 
           klass.helper_method :authorized?
 
-          klass.hide_action(:set_current_user, :configure_lockdown, :check_request_authorization, :check_model_authorization)
+          klass.hide_action(:set_current_user, :configure_lockdown, :check_request_authorization)
 
           klass.before_filter do |c|
             c.set_current_user
             c.configure_lockdown
             c.check_request_authorization
-            c.check_model_authorization
           end
 
           klass.filter_parameter_logging :password, :password_confirmation
@@ -103,7 +102,7 @@ module Lockdown
         include Lockdown::Frameworks::Rails::Controller
 
         def skip_sync?
-          Lockdown.system.fetch(:skip_db_sync_in).include?(framework_environment)
+          Lockdown::System.fetch(:skip_db_sync_in).include?(framework_environment)
         end
         
         def framework_environment
