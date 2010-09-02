@@ -22,7 +22,6 @@ module Lockdown
           # Basic auth functionality needs to be reworked as 
           # Lockdown doesn't provide authentication functionality.
           def set_current_user
-            #login_from_basic_auth? unless logged_in?
             if logged_in?
               Thread.current[:who_did_it] = Lockdown::System.
                 call(self, :who_did_it)
@@ -38,14 +37,9 @@ module Lockdown
 
           protected 
   
-          def path_allowed?(url)
-            session[:access_rights] ||= Lockdown::System.public_access
-            session[:access_rights].include?(url)
-          end
-    
           def check_session_expiry
             if session[:expiry_time] && session[:expiry_time] < Time.now
-              nil_lockdown_values
+              reset_lockdown_session
               Lockdown::System.call(self, :session_timeout_method)
             end
             session[:expiry_time] = Time.now + Lockdown::System.fetch(:session_timeout)
@@ -81,11 +75,17 @@ module Lockdown
               path = path[(subdir.length+1)..-1]
             end
 
-            return true if path_allowed?(path)
+            if Lockdown::Delivery.allowed?(path, session[:access_rights])
+              return true 
+            end
 
             begin
-              hash = ActionController::Routing::Routes.recognize_path(path, :method => method)
-              return path_allowed?(path_from_hash(hash)) if hash
+              hash = ActionController::Routing::Routes.
+                      recognize_path(path, :method => method)
+              if hash
+                return Lockdown::Delivery.allowed?(path_from_hash(hash),
+                                                      session[:access_rights])
+              end
             rescue Exception => e
               # continue on
             end
@@ -94,7 +94,7 @@ module Lockdown
             return true if url =~ /^mailto:/
 
             # Public file
-            file = File.join(RAILS_ROOT, 'public', url)
+            file = File.join(Rails.root, 'public', url)
             return true if File.exists?(file)
 
             # Passing in different domain
@@ -124,8 +124,7 @@ module Lockdown
           end
 
           def path_from_hash(hash)
-            subdir = Lockdown::System.fetch(:subdirectory)
-            (subdir ? subdir + "/" : "") + hash[:controller].to_s + "/" + hash[:action].to_s
+            hash[:controller].to_s + "/" + hash[:action].to_s
           end
 
           def remote_url?(domain = nil)
@@ -139,23 +138,6 @@ module Lockdown
             else
               redirect_to(session[:prevpage])
             end
-          end
-  
-          # Called from current_user.  Now, attempt to login by
-          # basic authentication information.
-          def login_from_basic_auth?
-            username, passwd = get_auth_data
-            if username && passwd
-              set_session_user ::User.authenticate(username, passwd)
-            end
-          end
-
-          @@http_auth_headers = %w(X-HTTP_AUTHORIZATION HTTP_AUTHORIZATION Authorization)
-          # gets BASIC auth info
-          def get_auth_data
-            auth_key  = @@http_auth_headers.detect { |h| request.env.has_key?(h) }
-            auth_data = request.env[auth_key].to_s.split unless auth_key.blank?
-            return auth_data && auth_data[0] == 'Basic' ? Base64.decode64(auth_data[1]).split(':')[0..1] : [nil, nil] 
           end
         end # Lock
       end # Controller
