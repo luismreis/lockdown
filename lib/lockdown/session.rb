@@ -55,7 +55,5 @@ module Lockdown
         session[val] = nil if session[val]
       end
     end 
-
-    alias_method :nil_lockdown_values, :reset_lockdown_session
   end # Session
 end # Lockdown
