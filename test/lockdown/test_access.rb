@@ -61,7 +61,4 @@ class TestLockdownAccess < MiniTest::Unit::TestCase
     assert_equal Lockdown::Configuration.protected_access, 
       "(\/my_account(\/.*)?)|(\/edit_posts(\/.*)?)"
   end
-
-
 end
-
