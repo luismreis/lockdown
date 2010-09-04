@@ -82,7 +82,7 @@ module Lockdown
             raise  InvalidPermissionAssignment, "Invalid permission assignment"
           end
 
-          p = ::Permission.find(:first, :conditions => ["name = ?", Lockdown.get_string(perm)]) 
+          p = ::Permission.find(:first, :conditions => ["name = ?", perm]) 
 
           ug_table = Lockdown.user_groups_hbtm_reference.to_s
           if "permissions" < ug_table
