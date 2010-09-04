@@ -9,8 +9,10 @@ module Lockdown
 
     # @param [String,Symbol] name permission reference. 
     def initialize(name)
-      @name = name.to_s
-      @resources = []
+      @name       = name.to_s
+      @resources  = []
+      @ispublic     = false
+      @isprotected  = false
     end
 
     # @param [String,Symbol] name resource reference. 
@@ -20,6 +22,24 @@ module Lockdown
       resource.instance_eval(&block) if block_given?
       @resources << resource
       resource
+    end
+
+    def is_public
+      @ispublic     = true
+      @isprotected  = false
+    end
+
+    def public?
+      @ispublic
+    end
+
+    def is_protected
+      @isprotected  = true
+      @ispublic     = false 
+    end
+
+    def protected?
+      @isprotected
     end
 
     # @return String representing all resources defining this permission

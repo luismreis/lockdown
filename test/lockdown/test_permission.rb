@@ -7,8 +7,22 @@ class TestLockdownPermission < MiniTest::Unit::TestCase
   end
 
   def test_initializer_sets_correct_state
-    assert_equal @permission.name, 'my_account'
-    assert_equal @permission.resources, []
+    assert_equal 'my_account', @permission.name
+    assert_equal [], @permission.resources
+    assert_equal false, @permission.public?
+    assert_equal false, @permission.protected?
+  end
+
+  def test_setting_public
+    @permission.is_public
+    assert_equal true, @permission.public?
+    assert_equal false, @permission.protected?
+  end
+
+  def test_setting_protected
+    @permission.is_protected
+    assert_equal true, @permission.protected?
+    assert_equal false, @permission.public?
   end
 
   def test_resource
