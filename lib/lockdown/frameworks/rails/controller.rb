@@ -62,8 +62,6 @@ module Lockdown
 
             return false unless url
 
-            return true if current_user_is_admin?
-
             method ||= (params[:method] || request.method)
 
             url_parts = URI::split(url.strip)

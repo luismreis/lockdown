@@ -9,10 +9,10 @@ module Lockdown
       user ||= current_user
 
       if user
-        session[:access_rights] = Lockdown::System.access_rights_for_user(user)
+        session[:access_rights] = Lockdown::Configuration.access_rights_for_user(user)
         session[:current_user_id] = user.id
       else
-        session[:access_rights] = Lockdown::System.public_access
+        session[:access_rights] = Lockdown::Configuration.public_access
       end
     end
 
@@ -24,12 +24,7 @@ module Lockdown
       session[:current_user_id]
     end
 
-    def current_user_is_admin?
-      session[:access_rights] == :all
-    end
-
     def current_user_access_in_group?(grp)
-      return true if current_user_is_admin?
         Lockdown::System.user_groups[grp].each do |perm|
           return true if access_in_perm?(perm)
         end
