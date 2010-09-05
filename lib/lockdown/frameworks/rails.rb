@@ -7,10 +7,6 @@ module Lockdown
   module Frameworks
     module Rails
       class << self
-        def use_me?
-          Object.const_defined?("ActionController") && ActionController.const_defined?("Base")
-        end
-
         def included(mod)
           mod.extend Lockdown::Frameworks::Rails::Environment
           mixin
@@ -56,10 +52,6 @@ module Lockdown
           ::RAILS_ROOT
         end
 
-        def init_file
-          "#{project_root}/lib/lockdown/init.rb"
-        end
-
         def view_helper
           ::ActionView::Base 
         end
@@ -76,25 +68,6 @@ module Lockdown
         
         def caching?
           ::Rails.configuration.cache_classes
-        end
-
-        # cache_classes is true in production and testing, need to
-        # do an instance eval instead
-        def add_controller_method(code)
-          Lockdown.controller_parent.class_eval code, __FILE__,__LINE__ +1
-        end
-
-        def controller_class_name(str)
-          str = "#{str}Controller"
-          if str.include?("__")
-            str.split("__").collect{|p| Lockdown.camelize(p)}.join("::")
-          else
-            Lockdown.camelize(str)
-          end
-        end
-
-        def fetch_controller_class(str)
-          eval("::#{controller_class_name(str)}")
         end
       end
 
