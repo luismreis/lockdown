@@ -41,7 +41,7 @@ module Lockdown
       def delete_extinct_permissions
         db_perms = ::Permission.find(:all).dup
         db_perms.each do |dbp|
-          unless @permissions.include?(Lockdown.get_symbol(dbp.name))
+          unless @permissions.include?(dbp.name)
             Lockdown.logger.info ">> Lockdown: Permission no longer in init.rb: #{dbp.name}, deleting."
           ug_table = Lockdown.user_groups_hbtm_reference.to_s
           if "permissions" < ug_table
