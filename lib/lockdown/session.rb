@@ -3,7 +3,6 @@
 module Lockdown
   module Session
 
-    protected
 
     def add_lockdown_session_values(user = nil)
       user ||= current_user
@@ -16,33 +15,30 @@ module Lockdown
       end
     end
 
+    # Tests for current_user_id > 0
+    # @return [True|False] 
     def logged_in?
       current_user_id.to_i > 0
     end
 
+    # @return session value of current_user_id
     def current_user_id
       session[:current_user_id]
     end
 
-    def current_user_access_in_group?(grp)
-        Lockdown::System.user_groups[grp].each do |perm|
-          return true if access_in_perm?(perm)
-        end
-      false
-    end
-
-    def access_in_perm?(perm)
-      if Lockdown::System.permissions[perm]
-        Lockdown::System.permissions[perm].each do |ar|
-          return true if session_access_rights_include?(ar)
-        end 
+    # Returns true if the permission's regex_pattern is 
+    # in session[:access_rights]
+    # @param [String] name permission name
+    # @return [True|False] 
+    def access_in_perm?(name)
+      if perm = Lockdown::Configuration.permission(name)
+        return session_access_rights.include?(perm.regex_pattern)
       end
       false
     end
 
-    def session_access_rights_include?(str)
-      return false unless session[:access_rights]
-      session[:access_rights].include?(str)
+    def session_access_rights
+      session[:access_rights].to_s
     end
 
     def reset_lockdown_session
