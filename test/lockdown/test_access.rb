@@ -61,4 +61,20 @@ class TestLockdownAccess < MiniTest::Unit::TestCase
     assert_equal Lockdown::Configuration.protected_access, 
       "(\/my_account(\/.*)?)|(\/edit_posts(\/.*)?)"
   end
+
+  def test_user_group
+    permission(:site)
+    permission(:registration)
+    permission(:view_posts)
+    user_group(:all, :site, :registration, :view_posts)
+
+    ug =  Lockdown::Configuration.find_or_create_user_group(:all)
+
+    assert_equal 'all', ug.name
+
+    assert_equal 'view_posts', ug.permissions.pop.name
+    assert_equal 'registration', ug.permissions.pop.name
+    assert_equal 'site', ug.permissions.pop.name
+  end
+
 end
