@@ -4,10 +4,6 @@ module Lockdown
   module Orms
     module ActiveRecord
       class << self
-        def use_me?
-          Object.const_defined?("ActiveRecord") && ::ActiveRecord.const_defined?("Base")
-        end
-
         def included(mod)
           mod.extend Lockdown::Orms::ActiveRecord::Helper
           mixin
@@ -54,14 +50,14 @@ module Lockdown
 
         def create_with_stamps
           pid = current_who_did_it || Lockdown::System.fetch(:default_who_did_it)
-          self[:created_by] = pid if self.respond_to?(:created_by) 
-          self[:updated_by] = pid if self.respond_to?(:updated_by) 
+          self[:created_by] = pid if respond_to?(:created_by) 
+          self[:updated_by] = pid if respond_to?(:updated_by) 
           create_without_stamps
         end
                   
         def update_with_stamps
           pid = current_who_did_it || Lockdown::System.fetch(:default_who_did_it)
-          self[:updated_by] = pid if self.respond_to?(:updated_by)
+          self[:updated_by] = pid if respond_to?(:updated_by)
           update_without_stamps
         end
       end
