@@ -10,6 +10,13 @@ class TestLockdown < MiniTest::Unit::TestCase
     Lockdown::Configuration.reset
   end
 
+  def test_it_allows_uri_without_beginning_slash
+    Authorization.permission :posts
+    Authorization.public_access :posts
+
+    assert_equal true, Lockdown::Delivery.allowed?('posts')
+  end
+
   def test_it_allows_uri_without_ending_slash
     Authorization.permission :posts
     Authorization.public_access :posts

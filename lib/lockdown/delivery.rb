@@ -17,7 +17,8 @@ module Lockdown
         access_rights_regex = Lockdown.regex(access_rights)
 
         path += "/" unless path =~ /\/$/
-
+        path = "/" + path unless path =~ /^\//
+        
         access_rights_regex =~ path ? true : false
       end
     end # class block
