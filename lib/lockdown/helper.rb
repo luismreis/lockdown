@@ -10,11 +10,6 @@ module Lockdown
       Regexp.new(/\A#{string}\z/)
     end
 
-    # @return [String] concatentation of public_access + "|" + protected_access
-    def authenticated_access
-      Monty::Configuration.public_access + "|" + Monty::Configuration.protected_access
-    end
-
     # @param [:users, "Users"]
     # @return "Users", :users
     def convert_reference_name(str_sym)
@@ -84,12 +79,8 @@ module Lockdown
       Array.new(len){||chars[rand(chars.size)]}.join
     end
 
-    def administrator_group_string
-      string_name(administrator_group_symbol)
-    end
-
-    def administrator_group_symbol
-      :administrators
+    def administrator_group_name
+      'Administrators'
     end
 
     private
