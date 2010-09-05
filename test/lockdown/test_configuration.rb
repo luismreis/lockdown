@@ -31,6 +31,8 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
 
     assert_equal "UserGroup", @config.user_group_model
     assert_equal "User", @config.user_model
+
+    assert_equal ['test'] , @config.skip_db_sync_in
   end
 
   def test_authenticated_access
@@ -170,5 +172,9 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
 
     assert_equal "((/home(/.*)?))|((/faq(/.*)?))|((/about(/.*)?))", 
       @config.access_rights_for_permissions('home', 'faq', 'about')
+  end
+
+  def test_skip_sync?
+    assert_equal true, @config.skip_sync?
   end
 end

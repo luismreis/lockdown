@@ -43,7 +43,9 @@ module Lockdown
       # are 'User' and 'Person'.
       # Default "User"
       attr_accessor :user_model
-
+      # Which environments Lockdown should not sync with db
+      # Default ['test']
+      attr_accessor :skip_db_sync_in
       # Set defaults.
       def reset
         @public_access                = ""
@@ -62,6 +64,8 @@ module Lockdown
 
         @user_group_model             = "UserGroup"
         @user_model                   = "User"
+
+        @skip_db_sync_in              = ['test']
       end
 
       # @return [String] concatentation of public_access + "|" + protected_access
@@ -177,6 +181,10 @@ module Lockdown
       # @return [String] combination of regex_patterns from permissions
       def access_rights_for_permissions(*names)
         names.collect{|name| "(#{permission(name).regex_pattern})"}.join('|')
+      end
+
+      def skip_sync?
+        true
       end
     end # class block
 
