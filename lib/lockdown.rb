@@ -19,14 +19,12 @@ require File.join("lockdown", "database")
 module Lockdown
   extend Lockdown::Helper
 
-  VERSION = '2.0.0'
-
   class << self
     attr_accessor :logger
 
     # @return the version string for the library.
     def version
-      VERSION
+      '2.0.0'
     end
 
     def rails_mixin
