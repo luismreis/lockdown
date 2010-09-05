@@ -49,14 +49,14 @@ module Lockdown
         end
 
         def create_with_stamps
-          pid = current_who_did_it || Lockdown::System.fetch(:default_who_did_it)
+          pid = current_who_did_it || Lockdown::Configuration.default_who_did_it
           self[:created_by] = pid if respond_to?(:created_by) 
           self[:updated_by] = pid if respond_to?(:updated_by) 
           create_without_stamps
         end
                   
         def update_with_stamps
-          pid = current_who_did_it || Lockdown::System.fetch(:default_who_did_it)
+          pid = current_who_did_it || Lockdown::Configuration.default_who_did_it
           self[:updated_by] = pid if respond_to?(:updated_by)
           update_without_stamps
         end

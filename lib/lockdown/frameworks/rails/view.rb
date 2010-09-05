@@ -42,7 +42,7 @@ module Lockdown
         def links(*lis)
           rvalue = []
           lis.each{|link| rvalue << link if link.length > 0 }
-          rvalue.join( Lockdown::System.fetch(:link_separator) )
+          rvalue.join( Lockdown::Configuration.link_separator )
         end
       end # View
     end # Rails

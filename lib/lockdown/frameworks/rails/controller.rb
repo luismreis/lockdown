@@ -2,15 +2,6 @@ module Lockdown
   module Frameworks
     module Rails
       module Controller
-        
-        def available_actions(klass)
-          klass.action_methods
-        end
-
-        def controller_name(klass)
-          klass.controller_name
-        end
-
         # Locking methods
         module Lock
 
@@ -23,8 +14,8 @@ module Lockdown
           # Lockdown doesn't provide authentication functionality.
           def set_current_user
             if logged_in?
-              Thread.current[:who_did_it] = Lockdown::System.
-                call(self, :who_did_it)
+              whodat = send(Lockdown::Configuration.who_did_it)
+              Thread.current[:who_did_it] = whodat
             end
           end
 
@@ -40,9 +31,9 @@ module Lockdown
           def check_session_expiry
             if session[:expiry_time] && session[:expiry_time] < Time.now
               reset_lockdown_session
-              Lockdown::System.call(self, :session_timeout_method)
+              send(Lockdown::Configuration.session_timeout_method)
             end
-            session[:expiry_time] = Time.now + Lockdown::System.fetch(:session_timeout)
+            session[:expiry_time] = Time.now + Lockdown::Configuration.session_timeout
           end
           
           def store_location
@@ -68,7 +59,7 @@ module Lockdown
 
             path = url_parts[5]
 
-            subdir = Lockdown::System.fetch(:subdirectory)
+            subdir = Lockdown::Configuration.subdirectory
             if subdir && subdir == path[1,subdir.length]
               path = path[(subdir.length+1)..-1]
             end
@@ -103,13 +94,13 @@ module Lockdown
 
             Lockdown.logger.info "Access denied: #{e}"
 
-            if Lockdown::System.fetch(:logout_on_access_violation)
+            if Lockdown::Configuration.logout_on_access_violation
               reset_session
             end
             respond_to do |format|
               format.html do
                 store_location
-                redirect_to Lockdown::System.fetch(:access_denied_path)
+                redirect_to Lockdown::Configuration.access_denied_path
                 return
               end
               format.xml do
