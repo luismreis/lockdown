@@ -160,15 +160,23 @@ module Lockdown
         return unless user
         return Lockdown::Resource.regex if administrator?(user)
 
-        rights = authenticated_access
-
         user_groups = user.send(Lockdown.user_groups_hbtm_reference)
-        user_groups.each do |grp|
-          user_group(grp.name).permissions.each do |perm|
-            rights += "|(#{perm.regex_pattern})"
+
+        permission_names = ""
+
+        user_groups.each do |ug|
+          ug.permissions.each do |p|
+            permission_names << p.name
           end
         end
-        rights
+
+        authenticated_access + "|" + access_rights_for_permissions(permission_names)
+      end
+
+      # @param [Array(String)] names permission names
+      # @return [String] combination of regex_patterns from permissions
+      def access_rights_for_permissions(*names)
+        names.collect{|name| "(#{permission(name).regex_pattern})"}.join('|')
       end
     end # class block
 

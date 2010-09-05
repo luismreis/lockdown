@@ -163,4 +163,12 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
     assert_equal ['faq', 'about'], @config.user_group_permissions_names('testtwo')
   end
 
+  def test_access_rights_for_permissions
+    Authorization.permission('home')
+    Authorization.permission('faq')
+    Authorization.permission('about')
+
+    assert_equal "((/home(/.*)?))|((/faq(/.*)?))|((/about(/.*)?))", 
+      @config.access_rights_for_permissions('home', 'faq', 'about')
+  end
 end
