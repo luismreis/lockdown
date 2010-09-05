@@ -6,7 +6,6 @@ module Lockdown
         module Lock
 
           def configure_lockdown
-            check_session_expiry
             store_location
           end
 
@@ -28,14 +27,6 @@ module Lockdown
 
           protected 
   
-          def check_session_expiry
-            if session[:expiry_time] && session[:expiry_time] < Time.now
-              reset_lockdown_session
-              send(Lockdown::Configuration.session_timeout_method)
-            end
-            session[:expiry_time] = Time.now + Lockdown::Configuration.session_timeout
-          end
-          
           def store_location
             if (request.method == :get) && (session[:thispage] != sent_from_uri)
               session[:prevpage] = session[:thispage] || ''
