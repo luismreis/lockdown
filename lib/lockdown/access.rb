@@ -92,7 +92,7 @@ module Lockdown
 
     # Method called by Lockdown::Watch to trigger parsing of class methods
     def configure
-      # Lockdown::Database.sync_with_db unless skip_sync?
+      Lockdown::Database.sync_with_db unless Lockdown::Configuration.skip_sync?
     end
 
     private
