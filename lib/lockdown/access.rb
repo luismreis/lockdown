@@ -53,6 +53,10 @@ module Lockdown
     #
     # @param *[String,Symbol] permissions that are accessible to everyone
     def public_access(*permissions)
+      permissions.each do |name|
+        Lockdown::Configuration.make_permission_public(name)
+      end
+
       Lockdown::Configuration.public_access = regexes(permissions)
     end
 
@@ -61,13 +65,34 @@ module Lockdown
     #
     # @param *[String,Symbol] permissions that are accessbile to authenticated users
     def protected_access(*permissions)
+      permissions.each do |name|  
+        Lockdown::Configuration.make_permission_protected(name)
+      end
+
       Lockdown::Configuration.protected_access = regexes(permissions)
     end
 
+    # Create user group by giving it a name and a list of permission names.
+    # @param [String, Array] user group name, permission names
+    def user_group(name, *permissions)
+      return if permissions.empty?
+
+      name = name.to_s
+
+      ug = Lockdown::Configuration.find_or_create_user_group(name)
+
+      permissions.each do |name|
+        if (perm = Lockdown::Configuration.permission(name))
+          ug.permissions << perm
+        end
+      end
+
+      Lockdown::Configuration.user_groups << ug
+    end
 
     # Method called by Lockdown::Watch to trigger parsing of class methods
     def configure
-      true
+      # Lockdown::Database.sync_with_db unless skip_sync?
     end
 
     private
