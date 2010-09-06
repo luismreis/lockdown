@@ -32,6 +32,13 @@ class TestLockdownPermission < MiniTest::Unit::TestCase
     assert_equal resource.name, 'users'
   end
 
+  def test_alias_controller
+    @permission.controller(:users)
+
+    controller = @permission.controllers.first
+    assert_equal controller.name, 'users'
+  end
+
   def test_resource_with_block
     @permission.resource(:users) do
       except :destroy
@@ -41,6 +48,14 @@ class TestLockdownPermission < MiniTest::Unit::TestCase
     assert_equal resource.exceptions, ['destroy']
   end
 
+  def test_alias_controller_with_block
+    @permission.controller(:users) do
+      except :destroy
+    end
+
+    controller = @permission.controllers.first
+    assert_equal controller.exceptions, ['destroy']
+  end
 
   def test_regex_pattern
     @permission.resource(:users)

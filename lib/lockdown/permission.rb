@@ -5,7 +5,7 @@ module Lockdown
     # Name of permission
     attr_accessor :name
     # Array of resource objects that define the access rights for this permission
-    attr_accessor :resources
+    attr_reader :resources
 
     # @param [String,Symbol] name permission reference. 
     def initialize(name)
@@ -22,6 +22,12 @@ module Lockdown
       resource.instance_eval(&block) if block_given?
       @resources << resource
       resource
+    end
+
+    alias_method :controller, :resource
+
+    def controllers
+      @resources
     end
 
     def is_public
