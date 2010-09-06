@@ -78,7 +78,7 @@ module Lockdown
       def permission(name)
         name = name.to_s
         perm = permissions.detect{|perm| name == perm.name}
-        raise PermissionNotFound unless perm
+        raise Lockdown::PermissionNotFound.new("Permission: #{name} not found") unless perm
         perm
       end
 
@@ -166,7 +166,7 @@ module Lockdown
 
         user_groups = user.send(Lockdown.user_groups_hbtm_reference)
 
-        permission_names = ""
+        permission_names = []
 
         user_groups.each do |ug|
           ug.permissions.each do |p|
@@ -174,7 +174,7 @@ module Lockdown
           end
         end
 
-        authenticated_access + "|" + access_rights_for_permissions(permission_names)
+        authenticated_access + "|" + access_rights_for_permissions(*permission_names)
       end
 
       # @param [Array(String)] names permission names
