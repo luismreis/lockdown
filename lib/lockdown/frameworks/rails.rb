@@ -20,7 +20,9 @@ module Lockdown
           end
 
           Lockdown::Configuration.class_eval do 
-            extend Lockdown::Frameworks::Rails::Configuration
+            def self.skip_sync?
+              skip_db_sync_in.include?(::Rails.env)
+            end
           end
         end
 
@@ -70,16 +72,6 @@ module Lockdown
           ::Rails.configuration.cache_classes
         end
       end
-
-      module Configuration
-        def skip_sync?
-          skip_db_sync_in.include?(framework_environment)
-        end
-        
-        def framework_environment
-          ::Rails.env
-        end
-      end # System
     end # Rails
   end # Frameworks
 end # Lockdown
