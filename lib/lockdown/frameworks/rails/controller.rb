@@ -61,7 +61,7 @@ module Lockdown
                 return Lockdown::Delivery.allowed?(path_from_hash(hash),
                                                       session[:access_rights])
               end
-            rescue Exception => e
+            rescue ActionController::RoutingError
               # continue on
             end
 
