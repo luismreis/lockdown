@@ -15,6 +15,7 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
   end
 
   def test_initial_state
+    assert_equal false, @config.configured
     assert_equal "", @config.public_access
     assert_equal "", @config.protected_access
     assert_equal [], @config.permissions
@@ -114,6 +115,19 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
 
     assert_equal 'faq', ug.permissions.pop.name
     assert_equal 'home',ug.permissions.pop.name
+  end
+
+  def test_maybe_add_user_group
+    Authorization.permission('home')
+    Authorization.permission('faq')
+
+    Authorization.user_group 'all', 'home', 'faq'
+    groups_1 = @config.user_groups
+
+    Authorization.user_group 'all', 'home', 'faq'
+    groups_2 = @config.user_groups
+
+    assert_equal groups_1, groups_2
   end
 
   def test_find_or_create_user_group

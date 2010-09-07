@@ -3,6 +3,9 @@
 module Lockdown
   module Configuration
     class << self
+      # Flag to determine if configuration method has been executed
+      # Default false
+      attr_accessor :configured
       # Regex string of paths that are publicly accessible. 
       # Default "\/"
       attr_accessor :public_access
@@ -48,6 +51,7 @@ module Lockdown
       attr_accessor :skip_db_sync_in
       # Set defaults.
       def reset
+        @configured                   = false
         @public_access                = ""
         @protected_access             = ""
         @permissions                  = []
@@ -120,6 +124,10 @@ module Lockdown
       def user_group(name)
         name = name.to_s
         user_groups.detect{|ug| name == ug.name}
+      end
+
+      def maybe_add_user_group(group)
+        @user_groups << group unless user_group_names.include?(group.name)
       end
 
       # @return [Lockdown::UserGroup] 
