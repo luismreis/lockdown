@@ -76,23 +76,24 @@ module Lockdown
     # @param [String, Array] user group name, permission names
     def user_group(name, *permissions)
       return if permissions.empty?
-
       name = name.to_s
-
       ug = Lockdown::Configuration.find_or_create_user_group(name)
 
       permissions.each do |name|
         if (perm = Lockdown::Configuration.permission(name))
-          ug.permissions << perm
+          ug.permissions << perm unless ug.permissions.include?(perm)
         end
       end
 
-      Lockdown::Configuration.user_groups << ug
+      Lockdown::Configuration.maybe_add_user_group(ug)
     end
 
-    # Method called by Lockdown::Watch to trigger parsing of class methods
+    # Method called by Lockdown::Delivery to trigger parsing of class methods
     def configure
-      Lockdown::Database.sync_with_db unless Lockdown::Configuration.skip_sync?
+      unless Lockdown::Configuration.configured
+        Lockdown::Database.sync_with_db unless Lockdown::Configuration.skip_sync?
+        Lockdown::Configuration.configured = true
+      end
     end
 
     private
