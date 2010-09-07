@@ -8,7 +8,6 @@ module Lockdown
       # an interface for each the different orm implementations. 
       # We'll see how it works...
       def sync_with_db
-
         @permissions = Lockdown::Configuration.permission_names
         @user_groups = Lockdown::Configuration.user_group_names
 
@@ -16,13 +15,12 @@ module Lockdown
           Lockdown.logger.info ">> Lockdown tables not found.  Skipping database sync."
           return
         end
+
         create_new_permissions
 
         delete_extinct_permissions
       
         maintain_user_groups
-      rescue Exception => e
-        Lockdown.logger.error ">> Lockdown sync failed: #{e.backtrace.join("\n")}" 
       end
 
       # Create permissions not found in the database
