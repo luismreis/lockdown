@@ -14,7 +14,7 @@ module Lockdown
     end
 
     def user_group_class
-      eval(Lockdown::Configuration.user_group_model)
+      eval("::#{Lockdown::Configuration.user_group_model}")
     end
 
     def user_groups_hbtm_reference
@@ -26,7 +26,7 @@ module Lockdown
     end
 
     def user_class
-      eval(Lockdown::Configuration.user_model)
+      eval("::#{Lockdown::Configuration.user_model}")
     end
 
     def users_hbtm_reference
