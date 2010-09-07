@@ -55,8 +55,14 @@ module Lockdown
             end
 
             begin
-              hash = ActionController::Routing::Routes.
-                      recognize_path(path, :method => method)
+              if ::Rails.respond_to?(:application)
+                router = ::Rails.application.routes
+              else
+                router = ActionController::Routing::Routes
+              end
+
+              hash = router.recognize_path(path, :method => method)
+
               if hash
                 return Lockdown::Delivery.allowed?(path_from_hash(hash),
                                                       session[:access_rights])
