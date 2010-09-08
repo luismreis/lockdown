@@ -9,8 +9,8 @@ begin
     gem.name = "lockdown"
     gem.version = Lockdown.version
     gem.rubyforge_project = "lockdown"
-    gem.summary = "Authorization system for Rails 2.x"
-    gem.description = "Restrict access to your controller actions.  Supports basic model level restrictions as well"
+    gem.summary = "Authorization system for Rails"
+    gem.description = "Restrict access to your controller actions. "
     gem.email = "andy@stonean.com"
     gem.homepage = "http://stonean.com/wiki/lockdown"
     gem.authors = ["Andrew Stone"]
