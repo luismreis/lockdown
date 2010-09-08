@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lockdown}
-  s.version = "2.0.0"
+  s.version = "2.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Stone"]
   s.date = %q{2010-09-07}
-  s.description = %q{Restrict access to your controller actions.  Supports basic model level restrictions as well}
+  s.description = %q{Restrict access to your controller actions. }
   s.email = %q{andy@stonean.com}
   s.extra_rdoc_files = [
     "README.txt"
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{lockdown}
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Authorization system for Rails 2.x}
+  s.summary = %q{Authorization system for Rails}
   s.test_files = [
     "test/lockdown/test_user_group.rb",
      "test/lockdown/test_delivery.rb",
