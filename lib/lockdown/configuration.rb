@@ -182,7 +182,11 @@ module Lockdown
           end
         end
 
-        authenticated_access + "|" + access_rights_for_permissions(*permission_names)
+        if permission_names.empty?
+          authenticated_access
+        else
+          authenticated_access + "|" + access_rights_for_permissions(*permission_names)
+        end
       end
 
       # @param [Array(String)] names permission names
