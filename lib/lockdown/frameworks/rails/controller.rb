@@ -54,6 +54,14 @@ module Lockdown
               return true 
             end
 
+            path_parts = path.split('/')
+
+            if path_parts.last == "index"
+              path_parts.pop
+              new_path = path_parts.join('/')
+              return Lockdown::Delivery.allowed?(new_path, session[:access_rights])
+            end
+
             begin
               if ::Rails.respond_to?(:application)
                 router = ::Rails.application.routes
@@ -72,11 +80,15 @@ module Lockdown
             end
 
             # Mailto link
-            return true if url =~ /^mailto:/
+            if url =~ /^mailto:/
+              return true 
+            end
 
             # Public file
             file = File.join(::Rails.root, 'public', url)
-            return true if File.exists?(file)
+            if File.exists?(file)
+              return true 
+            end
 
             # Passing in different domain
             return remote_url?(url_parts[2])
