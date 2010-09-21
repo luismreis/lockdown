@@ -112,6 +112,7 @@ class TestLockdown < MiniTest::Unit::TestCase
     end
     Authorization.public_access :posts
 
+
     assert_equal true, Lockdown::Delivery.allowed?('/posts/update')
 
     assert_equal true, Lockdown::Delivery.allowed?('/posts/update/')
@@ -124,6 +125,7 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal true, Lockdown::Delivery.allowed?('/posts/show/')
 
+    assert_equal false, Lockdown::Delivery.allowed?('/posts/')
   end
 
   def test_it_denies_uri_access_to_destroy
@@ -159,5 +161,32 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users/destroy')
   end
-end
 
+  def test_it_denies_index_access_to_resource_assigned_to_administrators
+    Authorization.permission :register_account do
+      resource :users do
+        only :new, :create
+      end
+    end
+    Authorization.public_access :register_account
+
+    Authorization.permission :my_account do
+      resource :users do
+        only :show, :update
+      end
+    end
+    Authorization.protected_access :my_account
+
+    Authorization.permission 'users'
+    Authorization.user_group 'Administrators', 'users'
+
+    assert_equal true, Lockdown::Delivery.allowed?('/users/new')
+    assert_equal true, Lockdown::Delivery.allowed?('/users/create')
+
+    assert_equal false, Lockdown::Delivery.allowed?('/users/')
+
+    assert_equal false, Lockdown::Delivery.allowed?('/users/', Lockdown::Configuration.authenticated_access)
+    assert_equal false, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+
+  end
+end
