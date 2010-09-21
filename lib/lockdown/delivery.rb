@@ -5,8 +5,6 @@ module Lockdown
     class << self
       # @return [true|false] if the given path is allowed
       def allowed?(path, access_rights = nil)
-        return true if path == '/'
-
         begin
           ::Authorization.configure
         rescue NameError
@@ -19,7 +17,11 @@ module Lockdown
         path += "/" unless path =~ /\/$/
         path = "/" + path unless path =~ /^\//
         
-        access_rights_regex =~ path ? true : false
+        if access_rights_regex =~ path 
+          return true 
+        end
+
+        return false
       end
     end # class block
   end # Delivery
