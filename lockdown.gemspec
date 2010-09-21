@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lockdown}
-  s.version = "2.0.1"
+  s.version = "2.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Stone"]
-  s.date = %q{2010-09-07}
+  s.date = %q{2010-09-21}
   s.description = %q{Restrict access to your controller actions. }
   s.email = %q{andy@stonean.com}
   s.extra_rdoc_files = [
@@ -43,8 +43,7 @@ Gem::Specification.new do |s|
      "test/lockdown/test_permission.rb",
      "test/lockdown/test_resource.rb",
      "test/lockdown/test_session.rb",
-     "test/lockdown/test_user_group.rb",
-     "test/test_lockdown.rb"
+     "test/lockdown/test_user_group.rb"
   ]
   s.homepage = %q{http://stonean.com/wiki/lockdown}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -61,8 +60,7 @@ Gem::Specification.new do |s|
      "test/lockdown/test_permission.rb",
      "test/lockdown/test_helper.rb",
      "test/lockdown/test_resource.rb",
-     "test/helper.rb",
-     "test/test_lockdown.rb"
+     "test/helper.rb"
   ]
 
   if s.respond_to? :specification_version then
