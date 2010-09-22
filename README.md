@@ -8,9 +8,9 @@ If you already have a complex permission scheme, use Lockdown to simplify the ma
 
 Follow me on Twitter (@stonean) to keep up to date.
 
-## INSTALL:
+## DOCS:
 
-  sudo gem install lockdown 
+  [http://docs.stonean.com/page/lockdown](http://docs.stonean.com/page/lockdown)
 
 ## LICENSE:
 
