@@ -1,23 +1,22 @@
-== DESCRIPTION:
+## Description
 
-Lockdown is an authorization system for RubyOnRails (ver >= 3.0).
+Lockdown is an authorization system for RubyOnRails. It is designed to handle a simple public vs private configuration to very fine grained access controls.
 
+If you are starting a site and just have public and protected (user required) areas, use Lockdown. Lockdown includes built in user groups of public and protected. From there you can easily add/extend permissions and create new user groups as your site needs grow.
 
-Version 3.0 of Lockdown will be a Rails 3 compatible rewrite.  I'm going to take some of the discoveries from Monty (my Rack based authorization project) and roll them into Lockdown.
-
-The model level interaction will be redone completely.  It sucks right now.
+If you already have a complex permission scheme, use Lockdown to simplify the management of access rules.
 
 Follow me on Twitter (@stonean) to keep up to date.
 
-== INSTALL:
+## INSTALL:
 
   sudo gem install lockdown 
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 Andrew Stone
+Copyright (c) 2010 Andrew Stone
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
