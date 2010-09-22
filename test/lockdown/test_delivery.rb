@@ -187,6 +187,38 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users/', Lockdown::Configuration.authenticated_access)
     assert_equal false, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+  end
 
+  def test_it_handles_namespaced_routes_correctly
+    Authorization.permission :posts
+    Authorization.permission :users
+    Authorization.public_access :posts, :users
+
+    Authorization.permission :protected_users do
+      resource 'nested/users'
+    end
+    Authorization.protected_access :protected_users
+
+    assert_equal true, Lockdown::Delivery.allowed?('/users')
+
+    assert_equal false, Lockdown::Delivery.allowed?('/nested/users')
+
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/nested/users', Lockdown::Configuration.authenticated_access)
+  end
+
+  def test_it_matches_exact_paths_only
+    Authorization.permission :users
+    Authorization.public_access :users
+
+    Authorization.permission :users_that_should_be_protected
+    Authorization.protected_access :users_that_should_be_protected
+
+    assert_equal true, Lockdown::Delivery.allowed?('/users')
+
+    assert_equal false, Lockdown::Delivery.allowed?('/users_that_should_be_protected')
+
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/users_that_should_be_protected', Lockdown::Configuration.authenticated_access)
   end
 end

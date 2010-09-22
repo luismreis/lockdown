@@ -16,8 +16,8 @@ module Lockdown
 
         path += "/" unless path =~ /\/$/
         path = "/" + path unless path =~ /^\//
-        
-        if access_rights_regex =~ path 
+
+        if (access_rights_regex =~ path) == 0
           return true 
         end
 
