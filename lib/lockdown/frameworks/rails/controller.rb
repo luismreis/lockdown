@@ -35,7 +35,7 @@ module Lockdown
           end
 
           def sent_from_uri
-            request.request_uri
+            request.fullpath
           end
       
           def authorized?(url, method = nil)
