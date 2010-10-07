@@ -28,7 +28,7 @@ module Lockdown
           protected 
   
           def store_location
-            if (request.method == :get) && (session[:thispage] != sent_from_uri)
+            if request.get? && (session[:thispage] != sent_from_uri)
               session[:prevpage] = session[:thispage] || ''
               session[:thispage] = sent_from_uri
             end
