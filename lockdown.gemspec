@@ -5,19 +5,19 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lockdown}
-  s.version = "2.0.3"
+  s.version = "2.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Stone"]
-  s.date = %q{2010-09-22}
+  s.date = %q{2010-10-10}
   s.description = %q{Restrict access to your controller actions. }
   s.email = %q{andy@stonean.com}
   s.extra_rdoc_files = [
-    "README.txt"
+    "README.md"
   ]
   s.files = [
     ".gitignore",
-     "README.txt",
+     "README.md",
      "Rakefile",
      "lib/lockdown.rb",
      "lib/lockdown/access.rb",
