@@ -184,8 +184,19 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
     Authorization.permission('faq')
     Authorization.permission('about')
 
-    assert_equal "((/home(/.*)?))|((/faq(/.*)?))|((/about(/.*)?))", 
+    assert_equal ["((/home(/.*)?))","((/faq(/.*)?))","((/about(/.*)?))"],
       @config.access_rights_for_permissions('home', 'faq', 'about')
+  end
+
+  def test_permission_regex_slicing
+    @config.permission_slice_size = 2
+
+    Authorization.permission('home')
+    Authorization.permission('faq')
+    Authorization.permission('about')
+
+    assert_equal ["x","((/home(/.*)?))|((/faq(/.*)?))","((/about(/.*)?))"],
+      @config.slice_permission_regexs('x', @config.access_rights_for_permissions('home', 'faq', 'about'))
   end
 
   def test_skip_sync?

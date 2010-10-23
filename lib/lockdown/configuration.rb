@@ -49,6 +49,9 @@ module Lockdown
       # Which environments Lockdown should not sync with db
       # Default ['test']
       attr_accessor :skip_db_sync_in
+      # Slice size for permission regexes
+      # Default 10
+      attr_accessor :permission_slice_size
       # Set defaults.
       def reset
         @configured                   = false
@@ -70,6 +73,7 @@ module Lockdown
         @user_model                   = "User"
 
         @skip_db_sync_in              = ['test']
+        @permission_slice_size        = 10
       end
 
       # @return [String] concatentation of public_access + "|" + protected_access
@@ -182,17 +186,21 @@ module Lockdown
           end
         end
 
-        if permission_names.empty?
-          authenticated_access
-        else
-          authenticated_access + "|" + access_rights_for_permissions(*permission_names)
+        slice_permission_regexs(authenticated_access, access_rights_for_permissions(*permission_names))
+      end
+
+      def slice_permission_regexs(authenticated_access, permissions)
+        result = [authenticated_access]
+        permissions.each_slice(permission_slice_size) do |permission_slice|
+          result << permission_slice.join('|')
         end
+        result
       end
 
       # @param [Array(String)] names permission names
       # @return [String] combination of regex_patterns from permissions
       def access_rights_for_permissions(*names)
-        names.collect{|name| "(#{permission(name).regex_pattern})"}.join('|')
+        names.collect{|name| "(#{permission(name).regex_pattern})"}
       end
 
       def skip_sync?
