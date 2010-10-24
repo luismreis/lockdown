@@ -196,7 +196,7 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
     Authorization.permission('about')
 
     assert_equal ["x","((/home(/.*)?))|((/faq(/.*)?))","((/about(/.*)?))"],
-      @config.slice_permission_regexs('x', @config.access_rights_for_permissions('home', 'faq', 'about'))
+      @config.slice_permission_regexes('x', @config.access_rights_for_permissions('home', 'faq', 'about'))
   end
 
   def test_skip_sync?
