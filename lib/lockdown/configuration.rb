@@ -186,10 +186,10 @@ module Lockdown
           end
         end
 
-        slice_permission_regexs(authenticated_access, access_rights_for_permissions(*permission_names))
+        slice_permission_regexes(authenticated_access, access_rights_for_permissions(*permission_names))
       end
 
-      def slice_permission_regexs(authenticated_access, permissions)
+      def slice_permission_regexes(authenticated_access, permissions)
         result = [authenticated_access]
         permissions.each_slice(permission_slice_size) do |permission_slice|
           result << permission_slice.join('|')
