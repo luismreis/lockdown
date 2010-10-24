@@ -15,9 +15,9 @@ module Lockdown
 
         access_rights ||= [Lockdown::Configuration.public_access]
 
-        return access_rights.any? { |access_rights_group|
+        return access_rights.any? do |access_rights_group|
           (Lockdown.regex(access_rights_group) =~ path) == 0
-        }
+        end
       end
     end # class block
   end # Delivery
