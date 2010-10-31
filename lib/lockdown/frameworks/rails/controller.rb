@@ -50,6 +50,11 @@ module Lockdown
 
             path = url_parts[5]
 
+            subdir = relative_url_root
+            if subdir && subdir == path[0,subdir.length]
+              path = path[subdir.length..-1]
+            end
+
             if Lockdown::Delivery.allowed?(path, session[:access_rights])
               return true 
             end
