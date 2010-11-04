@@ -40,7 +40,11 @@ module Lockdown
           # Rails *_path and *_url route methods won't have this problem since they explicitly include
           # the relative_url_root.
           def sent_from_uri
-            ActionController::Base.relative_url_root + request.fullpath
+            if ActionController::Base.relative_url_root
+              ActionController::Base.relative_url_root + request.fullpath
+            else
+              request.fullpath
+            end
           end
       
           def authorized?(url, method = nil)
