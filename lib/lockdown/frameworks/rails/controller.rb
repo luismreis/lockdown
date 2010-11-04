@@ -34,8 +34,13 @@ module Lockdown
             end
           end
 
+          # Rails ActionController::Request pack method overrides Rack::Request so that it forgets
+          # the application's relative_url_root, so it must be put back here. Otherwise
+          # redirect_back_or_default will fail.
+          # Rails *_path and *_url route methods won't have this problem since they explicitly include
+          # the relative_url_root.
           def sent_from_uri
-            request.fullpath
+            ActionController::Base.relative_url_root + request.fullpath
           end
       
           def authorized?(url, method = nil)
