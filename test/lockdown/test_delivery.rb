@@ -185,8 +185,8 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users/')
 
-    assert_equal false, Lockdown::Delivery.allowed?('/users/', [Lockdown::Configuration.authenticated_access])
-    assert_equal false, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
+    assert_equal false, Lockdown::Delivery.allowed?('/users/', Lockdown::Configuration.authenticated_access)
+    assert_equal false, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
   end
 
   def test_it_handles_namespaced_routes_correctly
@@ -203,8 +203,8 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/nested/users')
 
-    assert_equal true, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
-    assert_equal true, Lockdown::Delivery.allowed?('/nested/users', [Lockdown::Configuration.authenticated_access])
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/nested/users', Lockdown::Configuration.authenticated_access)
   end
 
   def test_it_matches_exact_paths_only
@@ -218,7 +218,7 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users_that_should_be_protected')
 
-    assert_equal true, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
-    assert_equal true, Lockdown::Delivery.allowed?('/users_that_should_be_protected', [Lockdown::Configuration.authenticated_access])
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/users_that_should_be_protected', Lockdown::Configuration.authenticated_access)
   end
 end
