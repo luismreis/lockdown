@@ -12,13 +12,13 @@ module Lockdown
 
         access_rights ||= Lockdown::Configuration.public_access
 
-        access_rights_regex = Lockdown.regex(access_rights)
-
         path += "/" unless path =~ /\/$/
         path = "/" + path unless path =~ /^\//
 
-        if (access_rights_regex =~ path) == 0
-          return true 
+        access_rights.split(Lockdown::DELIMITER).each do |ar|
+          if (Lockdown.regex(ar) =~ path) == 0
+            return true
+          end
         end
 
         return false

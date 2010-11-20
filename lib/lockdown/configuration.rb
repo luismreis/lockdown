@@ -74,7 +74,7 @@ module Lockdown
 
       # @return [String] concatentation of public_access + "|" + protected_access
       def authenticated_access
-        public_access + "|" + protected_access
+        public_access + Lockdown::DELIMITER + protected_access
       end
 
       # @param [String,Symbol] name permission name
@@ -185,14 +185,14 @@ module Lockdown
         if permission_names.empty?
           authenticated_access
         else
-          authenticated_access + "|" + access_rights_for_permissions(*permission_names)
+          authenticated_access + Lockdown::DELIMITER + access_rights_for_permissions(*permission_names)
         end
       end
 
       # @param [Array(String)] names permission names
       # @return [String] combination of regex_patterns from permissions
       def access_rights_for_permissions(*names)
-        names.collect{|name| "(#{permission(name).regex_pattern})"}.join('|')
+        names.collect{|name| "(#{permission(name).regex_pattern})"}.join(Lockdown::DELIMITER)
       end
 
       def skip_sync?

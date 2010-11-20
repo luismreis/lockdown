@@ -43,7 +43,7 @@ class TestLockdownAccess < MiniTest::Unit::TestCase
     public_access :site, :registration, :view_posts
 
     assert_equal Lockdown::Configuration.public_access, 
-      "(\/site(\/.*)?)|(\/registration(\/.*)?)|(\/view_posts(\/.*)?)"
+      "(\/site(\/.*)?)#{Lockdown::DELIMITER}(\/registration(\/.*)?)#{Lockdown::DELIMITER}(\/view_posts(\/.*)?)"
   end
 
   def test_protected_access
@@ -59,7 +59,7 @@ class TestLockdownAccess < MiniTest::Unit::TestCase
     protected_access :my_account, :edit_posts
 
     assert_equal Lockdown::Configuration.protected_access, 
-      "(\/my_account(\/.*)?)|(\/edit_posts(\/.*)?)"
+      "(\/my_account(\/.*)?)#{Lockdown::DELIMITER}(\/edit_posts(\/.*)?)"
   end
 
   def test_user_group

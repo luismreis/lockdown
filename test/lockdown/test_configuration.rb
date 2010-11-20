@@ -44,7 +44,7 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
     Authorization.public_access('home', 'faq')
     Authorization.protected_access('users')
 
-    assert_equal "(/home(/.*)?)|(/faq(/.*)?)|(/users(/.*)?)", @config.authenticated_access
+    assert_equal "(/home(/.*)?)#{Lockdown::DELIMITER}(/faq(/.*)?)#{Lockdown::DELIMITER}(/users(/.*)?)", @config.authenticated_access
   end
 
   def test_permission
@@ -184,7 +184,7 @@ class TestLockdownConfiguration < MiniTest::Unit::TestCase
     Authorization.permission('faq')
     Authorization.permission('about')
 
-    assert_equal "((/home(/.*)?))|((/faq(/.*)?))|((/about(/.*)?))", 
+    assert_equal "((/home(/.*)?))#{Lockdown::DELIMITER}((/faq(/.*)?))#{Lockdown::DELIMITER}((/about(/.*)?))", 
       @config.access_rights_for_permissions('home', 'faq', 'about')
   end
 
