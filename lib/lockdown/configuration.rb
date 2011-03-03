@@ -170,7 +170,7 @@ module Lockdown
       # @return [Regex] 
       def access_rights_for_user(user)
         return unless user
-        return Lockdown::Resource.regex if administrator?(user)
+        return Lockdown::Resource.all_access if administrator?(user)
 
         user_groups = user.send(Lockdown.user_groups_hbtm_reference)
 

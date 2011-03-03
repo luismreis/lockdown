@@ -3,7 +3,7 @@
 module Lockdown
   class Resource
     class << self
-      attr_accessor :resources, :resources_regex
+      attr_reader :resources
 
       # When a new resource is created, this method is called to register the root
       def register_regex(resource)
@@ -11,9 +11,14 @@ module Lockdown
         @resources << resource unless @resources.include?(resource)
       end
 
-      # @return [Regexp] created from resources' base regex
-      def regex
-        @resources_regex ||= Lockdown.regex(@resources.join("|"))
+      # @return [String] all registered regular expressions joined by a pipe
+      def all_access
+        @resources.join(Lockdown::DELIMITER)
+      end
+
+      # Reset resources to empty array
+      def reset_resources
+        @resources = []
       end
     end # class block
 
