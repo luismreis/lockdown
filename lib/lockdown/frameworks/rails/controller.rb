@@ -34,16 +34,41 @@ module Lockdown
             end
           end
 
+          def lenient_relative_url_root
+            root = ENV['RAILS_RELATIVE_URL_ROOT']
+            return root if root
+
+            silence_warnings do
+              root = ActionController::Base.relative_url_root
+              if root && root.start_with?('DEPRECATION WARNING')
+                root = nil
+              end
+            end
+
+            return root
+          end
+
           # Rails ActionController::Request pack method overrides Rack::Request so that it forgets
           # the application's relative_url_root, so it must be put back here. Otherwise
           # redirect_back_or_default will fail.
           # Rails *_path and *_url route methods won't have this problem since they explicitly include
           # the relative_url_root.
           def sent_from_uri
-            if ActionController::Base.relative_url_root
-              ActionController::Base.relative_url_root + request.fullpath
-            else
-              request.fullpath
+            silence_warnings do
+              subdir = ActionController::Base.relative_url_root
+              if subdir && subdir.start_with?('DEPRECATION WARNING')
+                # Rails 3 -> Rack -> request.fullpath will bear the full path including
+                # any prefix (expected to be defined in config.ru)
+                request.fullpath
+              else
+                # Rails 2 -> request.fullpath will not include relative_url_root
+                subdir = lenient_relative_url_root
+                if subdir
+                  subdir + request.fullpath
+                else
+                  request.fullpath
+                end
+              end
             end
           end
       
@@ -59,7 +84,7 @@ module Lockdown
 
             path = url_parts[5]
 
-            subdir = relative_url_root
+            subdir = lenient_relative_url_root
             if subdir && subdir == path[0,subdir.length]
               path = path[subdir.length..-1]
             end
@@ -118,7 +143,7 @@ module Lockdown
             respond_to do |format|
               format.html do
                 store_location
-                redirect_to Lockdown::Configuration.access_denied_path
+                redirect_to (lenient_relative_url_root || '') + Lockdown::Configuration.access_denied_path
                 return
               end
               format.xml do
