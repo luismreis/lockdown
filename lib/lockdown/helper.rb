@@ -3,6 +3,8 @@
 require 'active_support/core_ext'
 
 module Lockdown
+  DELIMITER = '^+^'
+
   module Helper
     # @return [Regexp] with \A \z boundaries
     def regex(string)

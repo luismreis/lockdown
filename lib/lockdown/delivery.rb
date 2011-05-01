@@ -10,14 +10,18 @@ module Lockdown
         rescue NameError
         end
 
+        access_rights ||= Lockdown::Configuration.public_access
+
         path += "/" unless path =~ /\/$/
         path = "/" + path unless path =~ /^\//
 
-        access_rights ||= [Lockdown::Configuration.public_access]
-
-        return access_rights.any? do |access_rights_group|
-          (Lockdown.regex(access_rights_group) =~ path) == 0
+        access_rights.split(Lockdown::DELIMITER).each do |ar|
+          if (Lockdown.regex(ar) =~ path) == 0
+            return true
+          end
         end
+
+        return false
       end
     end # class block
   end # Delivery

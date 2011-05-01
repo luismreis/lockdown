@@ -49,9 +49,6 @@ module Lockdown
       # Which environments Lockdown should not sync with db
       # Default ['test']
       attr_accessor :skip_db_sync_in
-      # Slice size for permission regexes
-      # Default 10
-      attr_accessor :permission_slice_size
       # Set defaults.
       def reset
         @configured                   = false
@@ -73,12 +70,11 @@ module Lockdown
         @user_model                   = "User"
 
         @skip_db_sync_in              = ['test']
-        @permission_slice_size        = 10
       end
 
       # @return [String] concatentation of public_access + "|" + protected_access
       def authenticated_access
-        public_access + "|" + protected_access
+        public_access + Lockdown::DELIMITER + protected_access
       end
 
       # @param [String,Symbol] name permission name
@@ -174,7 +170,7 @@ module Lockdown
       # @return [Regex] 
       def access_rights_for_user(user)
         return unless user
-        return Lockdown::Resource.regex if administrator?(user)
+        return Lockdown::Resource.all_access if administrator?(user)
 
         user_groups = user.send(Lockdown.user_groups_hbtm_reference)
 
@@ -186,21 +182,17 @@ module Lockdown
           end
         end
 
-        slice_permission_regexes(authenticated_access, access_rights_for_permissions(*permission_names))
-      end
-
-      def slice_permission_regexes(authenticated_access, permissions)
-        result = [authenticated_access]
-        permissions.each_slice(permission_slice_size) do |permission_slice|
-          result << permission_slice.join('|')
+        if permission_names.empty?
+          authenticated_access
+        else
+          authenticated_access + Lockdown::DELIMITER + access_rights_for_permissions(*permission_names)
         end
-        result
       end
 
       # @param [Array(String)] names permission names
       # @return [String] combination of regex_patterns from permissions
       def access_rights_for_permissions(*names)
-        names.collect{|name| "(#{permission(name).regex_pattern})"}
+        names.collect{|name| "(#{permission(name).regex_pattern})"}.join(Lockdown::DELIMITER)
       end
 
       def skip_sync?

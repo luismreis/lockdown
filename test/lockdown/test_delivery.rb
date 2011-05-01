@@ -185,8 +185,8 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users/')
 
-    assert_equal false, Lockdown::Delivery.allowed?('/users/', [Lockdown::Configuration.authenticated_access])
-    assert_equal false, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
+    assert_equal false, Lockdown::Delivery.allowed?('/users/', Lockdown::Configuration.authenticated_access)
+    assert_equal false, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
   end
 
   def test_it_handles_namespaced_routes_correctly
@@ -203,8 +203,8 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/nested/users')
 
-    assert_equal true, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
-    assert_equal true, Lockdown::Delivery.allowed?('/nested/users', [Lockdown::Configuration.authenticated_access])
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/nested/users', Lockdown::Configuration.authenticated_access)
   end
 
   def test_it_matches_exact_paths_only
@@ -218,7 +218,25 @@ class TestLockdown < MiniTest::Unit::TestCase
 
     assert_equal false, Lockdown::Delivery.allowed?('/users_that_should_be_protected')
 
-    assert_equal true, Lockdown::Delivery.allowed?('/users', [Lockdown::Configuration.authenticated_access])
-    assert_equal true, Lockdown::Delivery.allowed?('/users_that_should_be_protected', [Lockdown::Configuration.authenticated_access])
+    assert_equal true, Lockdown::Delivery.allowed?('/users', Lockdown::Configuration.authenticated_access)
+    assert_equal true, Lockdown::Delivery.allowed?('/users_that_should_be_protected', Lockdown::Configuration.authenticated_access)
+  end
+
+  # Ruby 1.8.7 will throw a 'RegexpError: regular expression too big error' on 
+  # large regex strings.  This is test it to make sure we don't hit that.
+  def test_a_large_set_of_regexs
+    count = 27
+
+    ('a'..'z').to_a.each do |letter|
+      (1..count).to_a.each do |multiplier|
+        Authorization.permission letter * multiplier
+      end
+    end
+
+    Authorization.public_access *Lockdown::Configuration.permissions.collect{|p| p.name}
+
+    (1..count).to_a.each do |multiplier|
+      assert_equal true, Lockdown::Delivery.allowed?('/' + 'a'*multiplier)
+    end
   end
 end

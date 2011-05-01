@@ -43,5 +43,13 @@ class TestLockdownResource < MiniTest::Unit::TestCase
     assert_equal resource.regex_pattern, "\/users(\/.*)?"
   end
 
+  def test_all_access
+    Lockdown::Resource.reset_resources 
+    Lockdown::Resource.new(:users)
+    Lockdown::Resource.new(:posts)
+
+    assert_equal Lockdown::Resource.all_access, "(\/users(\/.*)?)#{Lockdown::DELIMITER}(\/posts(\/.*)?)"
+  end
+
 end
 

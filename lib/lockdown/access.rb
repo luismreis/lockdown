@@ -101,7 +101,7 @@ module Lockdown
     def regexes(permissions)
       permissions.collect!{|p| p.to_s}
       perms = Lockdown::Configuration.permissions.select{|p| permissions.include?(p.name)}
-      perms.collect{|p| p.regex_pattern}.join("|")
+      perms.collect{|p| p.regex_pattern}.join(Lockdown::DELIMITER)
     end
 
   end # Access
