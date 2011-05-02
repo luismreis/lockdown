@@ -34,40 +34,35 @@ module Lockdown
             end
           end
 
-          def lenient_relative_url_root
-            root = ENV['RAILS_RELATIVE_URL_ROOT']
-            return root if root
+          if ActionController::Base.const_defined?(:DeprecatedBehavior) &&
+            ActionController::Base::DeprecatedBehavior.method_defined?(:relative_url_root)
+            # Rails 3 Deprecates relative_url_root (very noisily)
 
-            silence_warnings do
-              root = ActionController::Base.relative_url_root
-              if root && root.start_with?('DEPRECATION WARNING')
-                root = nil
-              end
+            def lenient_relative_url_root
+              return ENV['RAILS_RELATIVE_URL_ROOT']
             end
 
-            return root
-          end
+            def sent_from_uri
+              request.fullpath
+            end
+          else
+            # Rails 2 supports relative_url_root
 
-          # Rails ActionController::Request pack method overrides Rack::Request so that it forgets
-          # the application's relative_url_root, so it must be put back here. Otherwise
-          # redirect_back_or_default will fail.
-          # Rails *_path and *_url route methods won't have this problem since they explicitly include
-          # the relative_url_root.
-          def sent_from_uri
-            silence_warnings do
-              subdir = ActionController::Base.relative_url_root
-              if subdir && subdir.start_with?('DEPRECATION WARNING')
-                # Rails 3 -> Rack -> request.fullpath will bear the full path including
-                # any prefix (expected to be defined in config.ru)
-                request.fullpath
+            def lenient_relative_url_root
+              return ENV['RAILS_RELATIVE_URL_ROOT'] || ActionController::Base.relative_url_root
+            end
+
+            # Rails ActionController::Request pack method overrides Rack::Request so that it forgets
+            # the application's relative_url_root, so it must be put back here. Otherwise
+            # redirect_back_or_default will fail.
+            # Rails *_path and *_url route methods won't have this problem since they explicitly include
+            # the relative_url_root.
+            def sent_from_uri
+              subdir = lenient_relative_url_root
+              if subdir
+                subdir + request.fullpath
               else
-                # Rails 2 -> request.fullpath will not include relative_url_root
-                subdir = lenient_relative_url_root
-                if subdir
-                  subdir + request.fullpath
-                else
-                  request.fullpath
-                end
+                request.fullpath
               end
             end
           end
