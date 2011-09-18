@@ -42,7 +42,11 @@ module Lockdown
             c.check_request_authorization
           end
 
-          klass.filter_parameter_logging :password, :password_confirmation
+          if ::Rails::VERSION::MAJOR == 2
+            klass.filter_parameter_logging :password, :password_confirmation
+          elsif ::Rails::VERSION::MAJOR == 3
+            ::Rails.configuration.filter_parameters += [:password, :password_confirmation]
+          end
       
           klass.rescue_from SecurityError, :with => proc{|e| ld_access_denied(e)}
         end

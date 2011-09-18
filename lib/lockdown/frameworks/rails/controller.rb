@@ -34,18 +34,7 @@ module Lockdown
             end
           end
 
-          if ActionController::Base.const_defined?(:DeprecatedBehavior) &&
-            ActionController::Base::DeprecatedBehavior.method_defined?(:relative_url_root)
-            # Rails 3 Deprecates relative_url_root (very noisily)
-
-            def lenient_relative_url_root
-              return ENV['RAILS_RELATIVE_URL_ROOT']
-            end
-
-            def sent_from_uri
-              request.fullpath
-            end
-          else
+          if ::Rails::VERSION::MAJOR == 2
             # Rails 2 supports relative_url_root
 
             def lenient_relative_url_root
@@ -64,6 +53,16 @@ module Lockdown
               else
                 request.fullpath
               end
+            end
+          elsif ::Rails::VERSION::MAJOR == 3
+            # Rails 3 Deprecates relative_url_root (very noisily)
+
+            def lenient_relative_url_root
+              return ENV['RAILS_RELATIVE_URL_ROOT']
+            end
+
+            def sent_from_uri
+              request.fullpath
             end
           end
       
