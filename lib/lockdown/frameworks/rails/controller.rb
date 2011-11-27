@@ -129,8 +129,6 @@ module Lockdown
     
           def ld_access_denied(e)
 
-            Lockdown.logger.info "Access denied: #{e}"
-
             if Lockdown::Configuration.logout_on_access_violation
               reset_session
             end
